@@ -19,7 +19,7 @@ export default function NavBar() {
             <div className='w-12 sm:w-16'>
               <Logo initialFill={isIndexPage ? 'white' : 'black'} />
             </div>
-            <div className='flex flex-col justify-center hidden sm:block'>
+            <div className='flex-col justify-center hidden sm:flex'>
               <div className='text-xl font-extrabold leading-none'>
                 Bulgaria
               </div>
