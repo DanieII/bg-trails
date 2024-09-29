@@ -1,12 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./src/**/*.{js,ts,jsx,tsx}'],
+  content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {
-      colors: {
-        orange: '#ff8d00',
-      },
-    },
+    extend: {},
   },
-  plugins: [],
-}
+  daisyui: {
+    themes: ["autumn", "halloween"],
+    darkTheme: "halloween",
+  },
+  plugins: [require("daisyui")],
+};
