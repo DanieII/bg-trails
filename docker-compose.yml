@@ -2,27 +2,27 @@ services:
   bg-trail-db:
     image: mongo
     ports:
-      - '27017:27017'
+      - "27017:27017"
     volumes:
-      - 'bg-trail-mongodb:/data/db'
+      - "bg-trail-mongodb:/data/db"
 
   bg-trail-backend:
     build:
       context: ./backend
     ports:
-      - '3000:3000'
+      - "3000:3000"
     volumes:
-      - './backend:/app'
-      - '/app/node_modules'
+      - "./backend:/app"
+      - "/app/node_modules"
 
   bg-trail-frontend:
     build:
       context: ./frontend
     ports:
-      - '5173:5173'
+      - "5173:5173"
     volumes:
-      - './frontend:/app'
-      - '/app/node_modules'
+      - "./frontend:/app"
+      - "/app/node_modules"
 
 volumes:
   bg-trail-mongodb:
