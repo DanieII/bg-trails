@@ -37,7 +37,7 @@ export default function NavBar() {
           </div>
         </Link>
         <div className="flex gap-4 items-center">
-          <Link href="" className="font-bold">
+          <Link href="/explore" className="font-bold">
             Explore
           </Link>
           {authToken ? (
