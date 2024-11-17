@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import L from "leaflet";
+import { useEffect } from 'react';
+import L from 'leaflet';
 
 interface TrailProps {
   _id: string;
@@ -14,7 +14,7 @@ export default function Trail({
   name,
   location,
   length,
-  geometry,
+  geometry
 }: TrailProps) {
   useEffect(() => {
     const map = L.map(`map-${_id}`, {
@@ -24,18 +24,18 @@ export default function Trail({
       scrollWheelZoom: false,
       doubleClickZoom: false,
       boxZoom: false,
-      keyboard: false,
+      keyboard: false
     });
     const trailData: GeoJSON.Feature = {
-      type: "Feature",
+      type: 'Feature',
       properties: {},
-      geometry: geometry,
+      geometry: geometry
     };
     const trail = L.geoJSON(trailData).addTo(map);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: "© OpenStreetMap contributors",
+      attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
     const bounds = trail.getBounds();
@@ -47,14 +47,16 @@ export default function Trail({
   }, []);
 
   return (
-    <div className="card bg-base-100 w-96 shadow-2xl flex-grow sm:basis-1/3">
+    <div className='card w-96 flex-grow bg-base-100 shadow-xl sm:basis-1/3'>
       <figure>
-        <div id={`map-${_id}`} className="h-48 w-full"></div>
+        <div id={`map-${_id}`} className='z-0 h-48 w-full'></div>
       </figure>
-      <div className="card-body">
-        <h2 className="card-title">{name}</h2>
-        <p>{location}</p>
-        <p>{length} km</p>
+      <div className='card-body'>
+        <h2 className='card-title'>{name}</h2>
+        <div className='card-actions mt-auto justify-end pt-2'>
+          <div className='badge badge-outline'>{location}</div>
+          <div className='badge badge-outline'>{length} km</div>
+        </div>
       </div>
     </div>
   );
