@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Link } from 'wouter';
 import L from 'leaflet';
 
 interface TrailProps {
@@ -48,11 +49,15 @@ export default function Trail({
 
   return (
     <div className='card w-96 flex-grow bg-base-100 shadow-xl sm:basis-1/3'>
-      <figure>
-        <div id={`map-${_id}`} className='z-0 h-48 w-full'></div>
-      </figure>
+      <Link to={`~/explore/${_id}`}>
+        <figure>
+          <div id={`map-${_id}`} className='z-0 h-48 w-full'></div>
+        </figure>
+      </Link>
       <div className='card-body'>
-        <h2 className='card-title'>{name}</h2>
+        <Link to={`~/explore/${_id}`}>
+          <h2 className='link card-title'>{name}</h2>
+        </Link>
         <div className='card-actions mt-auto justify-end pt-2'>
           <div className='badge badge-outline'>{location}</div>
           <div className='badge badge-outline'>{length} km</div>
