@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
+const commentSchema = new Schema({
+  text: { type: String, required: true },
+  user: { type: mongoose.Types.ObjectId, ref: "User", required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
 const trailSchema = new Schema({
   name: { type: String, required: true },
   location: { type: String, required: true },
@@ -13,6 +19,7 @@ const trailSchema = new Schema({
     },
     coordinates: { type: Array, required: true },
   },
+  comments: [commentSchema],
 });
 
 const Trail = mongoose.model("Trail", trailSchema);

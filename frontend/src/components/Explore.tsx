@@ -57,54 +57,52 @@ export default function Explore() {
   };
 
   return (
-    <section>
-      <div className='container min-h-screen'>
-        <div className='flex items-center justify-between'>
-          <h1 className='hidden text-center text-2xl font-bold sm:block sm:text-left'>
-            Explore hiking trails in Bulgaria
-          </h1>
-          <details className='dropdown dropdown-end mx-auto sm:mx-0'>
-            <summary className='btn m-1'>Locations</summary>
-            <ul className='menu dropdown-content z-[1] w-52 rounded-box bg-base-100 p-2 shadow'>
-              {locations.map((location) => (
-                <li key={location}>
-                  <a
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setLocationFilter(location);
-                    }}
-                  >
-                    {location}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </details>
-        </div>
-        <InfiniteScroll
-          dataLength={trails.length}
-          next={fetchTrails}
-          hasMore={hasMore}
-          loader={
-            <div className='flex items-center justify-center'>
-              <span className='loading loading-spinner loading-lg'></span>
-            </div>
-          }
-        >
-          <div className='my-4 flex flex-wrap gap-6 pb-2'>
-            {trails.map((trail) => (
-              <Trail
-                key={trail._id}
-                _id={trail._id}
-                name={trail.name}
-                location={trail.location}
-                length={trail.length}
-                geometry={trail.geometry}
-              />
+    <div className='container min-h-screen'>
+      <div className='flex items-center justify-between'>
+        <h1 className='hidden text-center text-2xl font-bold sm:block sm:text-left'>
+          Explore hiking trails in Bulgaria
+        </h1>
+        <details className='dropdown dropdown-end mx-auto sm:mx-0'>
+          <summary className='btn btn-primary m-1'>Locations</summary>
+          <ul className='menu dropdown-content z-[1] w-52 rounded-box bg-primary p-2 text-primary-content shadow'>
+            {locations.map((location) => (
+              <li key={location}>
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLocationFilter(location);
+                  }}
+                >
+                  {location}
+                </a>
+              </li>
             ))}
-          </div>
-        </InfiniteScroll>
+          </ul>
+        </details>
       </div>
-    </section>
+      <InfiniteScroll
+        dataLength={trails.length}
+        next={fetchTrails}
+        hasMore={hasMore}
+        loader={
+          <div className='flex items-center justify-center'>
+            <span className='loading loading-spinner loading-lg'></span>
+          </div>
+        }
+      >
+        <div className='my-4 flex flex-wrap gap-6 pb-2'>
+          {trails.map((trail) => (
+            <Trail
+              key={trail._id}
+              _id={trail._id}
+              name={trail.name}
+              location={trail.location}
+              length={trail.length}
+              geometry={trail.geometry}
+            />
+          ))}
+        </div>
+      </InfiniteScroll>
+    </div>
   );
 }

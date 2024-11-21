@@ -1,4 +1,5 @@
-import { createContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useState, useEffect, ReactNode } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 interface AuthProvider {
   children: ReactNode;
@@ -13,22 +14,29 @@ interface AuthContext {
 export const AuthContext = createContext<AuthContext>({
   authToken: null,
   setAuthToken: () => {},
-  logout: () => {},
+  logout: () => {}
 });
 
 export function AuthProvider({ children }: AuthProvider) {
-  const [authToken, setAuthToken] = useState(localStorage.getItem("token"));
+  const [authToken, setAuthToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
     if (authToken) {
-      localStorage.setItem("token", authToken);
+      const decodedToken: { exp: number } = jwtDecode(authToken);
+      const isTokenExpired = decodedToken.exp * 1000 < Date.now();
+
+      if (isTokenExpired) {
+        setAuthToken(null);
+      } else {
+        localStorage.setItem('token', authToken);
+      }
     } else {
-      localStorage.removeItem("token");
+      localStorage.removeItem('token');
     }
   }, [authToken]);
 
   function logout() {
-    setAuthToken("");
+    setAuthToken(null);
   }
 
   return (

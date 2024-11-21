@@ -21,7 +21,8 @@ function App() {
           <Route path='/explore/:id' component={TrailDetails}></Route>
           <Route>
             <h1 className='absolute left-1/2 top-1/2 -translate-x-1/2 text-center text-4xl font-bold text-black'>
-              <span className='font-extrabold'>404!</span> No such page
+              <span className='font-extrabold text-base-content'>404!</span> No
+              such page
             </h1>
           </Route>
         </Switch>

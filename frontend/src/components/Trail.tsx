@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Link } from 'wouter';
 import L from 'leaflet';
+import { getMap } from '../utils/trails';
 
 interface TrailProps {
   _id: string;
@@ -18,29 +19,7 @@ export default function Trail({
   geometry
 }: TrailProps) {
   useEffect(() => {
-    const map = L.map(`map-${_id}`, {
-      zoomControl: false,
-      dragging: false,
-      touchZoom: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false
-    });
-    const trailData: GeoJSON.Feature = {
-      type: 'Feature',
-      properties: {},
-      geometry: geometry
-    };
-    const trail = L.geoJSON(trailData).addTo(map);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap contributors'
-    }).addTo(map);
-
-    const bounds = trail.getBounds();
-    map.fitBounds(bounds);
+    const map = getMap(geometry, _id, false);
 
     return () => {
       map.remove();
@@ -59,8 +38,8 @@ export default function Trail({
           <h2 className='link card-title'>{name}</h2>
         </Link>
         <div className='card-actions mt-auto justify-end pt-2'>
-          <div className='badge badge-outline'>{location}</div>
-          <div className='badge badge-outline'>{length} km</div>
+          <div className='badge badge-primary'>{location}</div>
+          <div className='badge badge-primary'>{length} km</div>
         </div>
       </div>
     </div>

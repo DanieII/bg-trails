@@ -1,15 +1,18 @@
-import axios from "axios";
+import axios from 'axios';
 
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
-    "Content-Type": "application/json",
-  },
+    'Content-Type': 'application/json'
+  }
 });
 
-axios.interceptors.request.use(function (config) {
-  const token = localStorage.getItem("token");
-  config.headers.Authorization = token;
+axiosInstance.interceptors.request.use(function (config) {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   return config;
 });
