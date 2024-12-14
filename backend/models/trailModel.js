@@ -20,7 +20,10 @@ const trailSchema = new Schema({
     coordinates: { type: Array, required: true },
   },
   comments: [commentSchema],
+  likes: [{ type: mongoose.Types.ObjectId, ref: "User" }],
 });
+
+trailSchema.index({ geometry: "2dsphere" });
 
 const Trail = mongoose.model("Trail", trailSchema);
 

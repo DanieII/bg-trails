@@ -1,23 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import { Link } from 'wouter';
-import L from 'leaflet';
 import { getMap } from '../utils/trails';
+import { AuthContext } from '../context/AuthContext';
+import { TrailType } from '../types';
 
-interface TrailProps {
-  _id: string;
-  name: string;
-  location: string;
-  length: number;
-  geometry: GeoJSON.GeometryObject;
-}
+type TrailProps = {
+  trail: TrailType;
+  className?: string;
+};
 
-export default function Trail({
-  _id,
-  name,
-  location,
-  length,
-  geometry
-}: TrailProps) {
+export default function Trail({ trail, className }: TrailProps) {
+  const { _id, name, location, length, geometry } = trail;
+  const { authToken } = useContext(AuthContext);
+
   useEffect(() => {
     const map = getMap(geometry, _id, false);
 
@@ -27,7 +22,7 @@ export default function Trail({
   }, []);
 
   return (
-    <div className='card w-96 flex-grow bg-base-100 shadow-xl sm:basis-1/3'>
+    <div className={`card flex-grow bg-base-100 shadow-md ${className}`}>
       <Link to={`~/explore/${_id}`}>
         <figure>
           <div id={`map-${_id}`} className='z-0 h-48 w-full'></div>
@@ -35,11 +30,13 @@ export default function Trail({
       </Link>
       <div className='card-body'>
         <Link to={`~/explore/${_id}`}>
-          <h2 className='link card-title'>{name}</h2>
+          <h2 className='card-title'>{name}</h2>
         </Link>
-        <div className='card-actions mt-auto justify-end pt-2'>
-          <div className='badge badge-primary'>{location}</div>
-          <div className='badge badge-primary'>{length} km</div>
+        <div className='mt-auto pt-2'>
+          <div className='card-actions justify-end'>
+            <div className='badge badge-primary'>{location}</div>
+            <div className='badge badge-primary'>{length} km</div>
+          </div>
         </div>
       </div>
     </div>

@@ -5,13 +5,21 @@ const authenticateUser = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
 
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    if (!token) {
+      return res.status(401).json({ message: "No auth token" });
+    }
 
-    req.userId = decodedToken.id;
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!verified) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    req.userId = verified.id;
 
     next();
   } catch (error) {
-    res.status(401).json({ error: "Unauthorized" });
+    return res.status(500).json({ error: error.message });
   }
 };
 

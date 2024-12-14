@@ -1,11 +1,19 @@
 import Trail from "../models/trailModel.js";
-import mongoose from "mongoose";
+import { isValidObjectId } from "mongoose";
 
 const getTrails = async (req, res) => {
   try {
-    const { page, limit, location } = req.query;
+    const { page, limit, location, search } = req.query;
     const skip = page * limit;
-    const filter = location ? { location } : {};
+    const filter = {};
+
+    if (location) {
+      filter.location = location;
+    }
+    if (search) {
+      filter.name = { $regex: search, $options: "i" };
+    }
+
     const trails = await Trail.find(filter).skip(skip).limit(limit);
 
     res.status(200).json(trails);
@@ -14,16 +22,34 @@ const getTrails = async (req, res) => {
   }
 };
 
+const getClosestTrails = async (req, res) => {
+  let { lat, lon } = req.query;
+  lat = parseFloat(lat);
+  lon = parseFloat(lon);
+
+  const closestTrails = await Trail.aggregate([
+    {
+      $geoNear: {
+        near: { type: "Point", coordinates: [lat, lon] },
+        distanceField: "dist.calculated",
+        maxDistance: 5000,
+        spherical: true,
+      },
+    },
+  ]);
+
+  res.status(200).json(closestTrails);
+};
+
 const getTrailDetails = async (req, res) => {
   try {
     const { id } = req.params;
-    let trail;
 
-    try {
-      trail = await Trail.findById(id);
-    } catch (error) {
-      res.status(404).json({ message: "Trail not found" });
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Trail not found" });
     }
+
+    const trail = await Trail.findById(id);
 
     res.status(200).json(trail);
   } catch (error) {
@@ -46,12 +72,12 @@ const createComment = async (req, res) => {
     const { id } = req.params;
     const { text } = req.body;
     const userId = req.userId;
-    const trail = await Trail.findById(id);
 
-    if (!trail) {
-      res.status(404).json({ message: "Trail not found" });
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Trail not found" });
     }
 
+    const trail = await Trail.findById(id);
     const comment = { text, user: userId };
     trail.comments.push(comment);
     await trail.save();
@@ -65,19 +91,80 @@ const createComment = async (req, res) => {
 const getComments = async (req, res) => {
   try {
     const { id } = req.params;
-    let comments;
 
-    try {
-      const trail = await Trail.findById(id);
-      comments = trail.get("comments");
-    } catch (error) {
-      res.status(404).json({ message: "Trail not found" });
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Trail not found" });
     }
 
-    res.status(200).json(comments);
+    const trail = await Trail.findById(id).populate({
+      path: "comments",
+      populate: {
+        path: "user",
+        select: "firstName lastName",
+      },
+    });
+
+    res.status(200).json(trail.comments);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export { getTrails, getTrailDetails, getLocations, createComment, getComments };
+//const likeTrail = async (req, res) => {
+//  try {
+//    const { id } = req.params;
+//    const userId = req.userId;
+//
+//    if (!isValidObjectId(id)) {
+//      return res.status(400).json({ message: "Trail not found" });
+//    }
+//
+//    const trail = await Trail.findById(id);
+//
+//    if (trail.likes.includes(userId)) {
+//      return res
+//        .status(400)
+//        .json({ message: "User has already liked the trail" });
+//    }
+//
+//    trail.likes.push(userId);
+//    await trail.save();
+//
+//    res.status(200).json({ message: "Trail liked", id });
+//  } catch (error) {
+//    res.status(500).json({ message: error.message });
+//  }
+//};
+//
+//const unlikeTrail = async (req, res) => {
+//  try {
+//    const { id } = req.params;
+//    const userId = req.userId;
+//
+//    if (!isValidObjectId(id)) {
+//      return res.status(400).json({ message: "Trail not found" });
+//    }
+//
+//    const trail = await Trail.findById(id);
+//
+//    if (!trail.likes.includes(userId)) {
+//      return res.status(400).json({ message: "User has not liked the trail" });
+//    }
+//
+//    // No idea if this works
+//    trail.likes = trail.likes.filter((likeUserId) => likeUserId !== userId);
+//
+//    return res.status(200).json({ message: "Trail unliked", id });
+//  } catch (error) {
+//    res.status(500).json({ message: error.message });
+//  }
+//};
+
+export {
+  getTrails,
+  getClosestTrails,
+  getTrailDetails,
+  getLocations,
+  createComment,
+  getComments,
+};

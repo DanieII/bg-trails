@@ -3,17 +3,17 @@ import axiosInstance from '../axiosConfig';
 import { AuthContext } from '../context/AuthContext';
 import { Link } from 'wouter';
 
-interface AddCommentProps {
+type AddCommentProps = {
   trailId: string;
   fetchComments: () => void;
-}
+};
 
 export default function AddComment({
   trailId,
   fetchComments
 }: AddCommentProps) {
   const [comment, setComment] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string>();
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const { authToken } = useContext(AuthContext);
 
   const addComment = async () => {
@@ -37,6 +37,7 @@ export default function AddComment({
       return;
     }
 
+    setComment('');
     await addComment();
   };
 
@@ -44,11 +45,10 @@ export default function AddComment({
     <div className='mt-4'>
       {authToken ? (
         <form className='form-control gap-2' onSubmit={handleCommentSubmit}>
-          <input
-            type='text'
+          <textarea
             placeholder='Add a comment'
             required
-            className='input input-bordered'
+            className='textarea textarea-bordered'
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           />

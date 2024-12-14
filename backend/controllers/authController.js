@@ -8,9 +8,18 @@ const getUsers = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const { firstName, lastName, email, password } = req.body;
-
   try {
+    const { firstName, lastName, email, password } = req.body;
+    if (!firstName || !lastName || !email || !password) {
+      return res.status(400).json({ message: "Enter all the fields" });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
+    }
+
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "Email already used" });
@@ -22,21 +31,22 @@ const registerUser = async (req, res) => {
 
     const token = generateJWT(user);
 
-    res.status(201).json({ token });
+    res.status(201).json({ token, user });
   } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Registration failed", error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-
   try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Enter all the fields" });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "Email not found" });
+      return res.status(400).json({ message: "Email not found" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
@@ -48,9 +58,7 @@ const loginUser = async (req, res) => {
 
     res.status(201).json({ token });
   } catch (error) {
-    return res
-      .status(400)
-      .json({ message: "Login failed", error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 

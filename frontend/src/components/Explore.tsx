@@ -2,21 +2,16 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../axiosConfig';
 import Trail from './Trail';
 import InfiniteScroll from 'react-infinite-scroll-component';
-
-interface Trail {
-  _id: string;
-  name: string;
-  location: string;
-  length: number;
-  geometry: GeoJSON.GeometryObject;
-}
+import { useSearch } from 'wouter';
+import { TrailType } from '../types';
 
 export default function Explore() {
-  const [trails, setTrails] = useState<Trail[]>([]);
+  const [trails, setTrails] = useState<TrailType[]>([]);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [page, setPage] = useState<number>(0);
   const [locations, setLocations] = useState<string[]>([]);
   const [locationFilter, setLocationFilter] = useState<string>('');
+  const searchString = useSearch();
 
   useEffect(() => {
     fetchLocations();
@@ -28,11 +23,13 @@ export default function Explore() {
 
   const fetchTrails = async (currentPage = page) => {
     try {
+      const searchParams = new URLSearchParams(searchString);
+      const search = searchParams.get('search') || '';
       const response = await axiosInstance.get(
-        `/trails?page=${currentPage}&limit=8&location=${locationFilter}`
+        `/trails?page=${currentPage}&limit=8&location=${locationFilter}&search=${search}`
       );
 
-      // Append trails if not first page
+      // Reset trails if on first page
       if (currentPage === 0) {
         setTrails(response.data);
       } else {
@@ -90,16 +87,9 @@ export default function Explore() {
           </div>
         }
       >
-        <div className='my-4 flex flex-wrap gap-6 pb-2'>
+        <div className='mt-6 flex flex-wrap gap-6'>
           {trails.map((trail) => (
-            <Trail
-              key={trail._id}
-              _id={trail._id}
-              name={trail.name}
-              location={trail.location}
-              length={trail.length}
-              geometry={trail.geometry}
-            />
+            <Trail key={trail._id} trail={trail} className='w-full sm:w-1/3' />
           ))}
         </div>
       </InfiniteScroll>

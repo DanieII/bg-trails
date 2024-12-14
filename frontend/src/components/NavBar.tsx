@@ -14,7 +14,7 @@ export default function NavBar() {
     <nav
       className={`${
         isIndexPage
-          ? 'to-transparent` absolute h-36 w-full bg-gradient-to-b from-black/80 !text-neutral-content'
+          ? 'to-transparent` absolute z-10 h-40 w-full bg-gradient-to-b from-black/80 !text-neutral-content'
           : ''
       }`}
     >

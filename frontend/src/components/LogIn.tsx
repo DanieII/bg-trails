@@ -2,7 +2,7 @@ import { FormEvent, SyntheticEvent, useContext, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { AuthContext } from '../context/AuthContext';
 import { login } from '../services/authService';
-import { validatePassword } from '../utils/validation';
+import axios from 'axios';
 
 export default function LogIn() {
   const [email, setEmail] = useState('');
@@ -16,11 +16,18 @@ export default function LogIn() {
 
     try {
       const token = await login(email, password);
+
       setAuthToken(token);
       navigate('~/');
-    } catch (error: any) {
-      const errorMessage = error.response.data.message;
-      setErrorMessage(errorMessage);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setErrorMessage(error.response?.data.message);
+        } else {
+          setErrorMessage('Could not log in');
+          console.log(error);
+        }
+      }
     }
   }
 

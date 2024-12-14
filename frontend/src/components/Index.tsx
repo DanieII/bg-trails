@@ -1,11 +1,11 @@
-import Header from "./Header";
-import { useEffect } from "react";
-import L from "leaflet";
+import Header from './Header';
+import ClosestTrails from './ClosestTrails';
 
 export default function Index() {
   return (
     <>
       <Header />
+      <ClosestTrails />
     </>
   );
 }

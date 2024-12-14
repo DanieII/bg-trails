@@ -1,12 +1,9 @@
 import { FormEvent, useContext, useState } from 'react';
-import {
-  validateName,
-  validatePassword,
-  validateEmail
-} from '../utils/validation';
-import { login, register } from '../services/authService';
+import { validateEmail } from '../utils/validation';
+import { register } from '../services/authService';
 import { Link, useLocation } from 'wouter';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 export default function Register() {
   const [firstName, setFirstName] = useState<string>('');
@@ -17,43 +14,30 @@ export default function Register() {
   const { setAuthToken } = useContext(AuthContext);
   const [location, navigate] = useLocation();
 
-  const validateAndSetError = (
-    validationFn: (value: string) => string,
-    toValidate: string
-  ) => {
-    const validationError = validationFn(toValidate);
-    if (validationError) {
-      setErrorMessage(validationError);
-
-      return true;
-    }
-
-    return false;
-  };
-
   async function handleLoginSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const validations = [
-      { validationFn: validateEmail, toValidate: email },
-      { validationFn: validateName, toValidate: firstName },
-      { validationFn: validateName, toValidate: lastName },
-      { validationFn: validatePassword, toValidate: password }
-    ];
+    const isEmailValid = validateEmail(email);
 
-    for (const { validationFn, toValidate } of validations) {
-      if (validateAndSetError(validationFn, toValidate)) {
-        return;
-      }
+    if (!isEmailValid) {
+      setErrorMessage('Enter a valid email');
+
+      return;
     }
 
     try {
       const token = await register(firstName, lastName, email, password);
+
       setAuthToken(token);
       navigate('~/');
-    } catch (error: any) {
-      const errorMessage = error.response.data.message;
-      setErrorMessage(errorMessage);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          setErrorMessage(error.response?.data.message);
+        } else {
+          console.log(error);
+        }
+      }
     }
   }
 

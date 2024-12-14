@@ -2,19 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'wouter';
 import axiosInstance from '../axiosConfig';
 import { getMap } from '../utils/trails';
-import { AxiosError } from 'axios';
 import Comments from './Comments';
-
-interface Trail {
-  _id: string;
-  name: string;
-  location: string;
-  length: number;
-  geometry: GeoJSON.GeometryObject;
-}
+import { TrailType } from '../types';
 
 export default function TrailDetails() {
-  const [trail, setTrail] = useState<Trail>();
+  const [trail, setTrail] = useState<TrailType>();
   const [map, setMap] = useState<L.Map>();
   const params = useParams();
   const trailId = params.id;
