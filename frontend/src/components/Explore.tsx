@@ -87,7 +87,7 @@ export default function Explore() {
           </div>
         }
       >
-        <div className='mt-6 flex flex-wrap gap-6'>
+        <div className='my-6 flex flex-wrap gap-6'>
           {trails.map((trail) => (
             <Trail key={trail._id} trail={trail} className='w-full sm:w-1/3' />
           ))}

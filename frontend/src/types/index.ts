@@ -4,11 +4,12 @@ export type TrailType = {
   location: string;
   length: number;
   geometry: GeoJSON.GeometryObject;
+  likes: Array<string> | undefined;
 };
 
 export type CommentType = {
   _id: string;
   text: string;
-  user: { _id: string; firstName: string; lastName: string };
+  user: { firstName: string; lastName: string };
   createdAt: string;
 };

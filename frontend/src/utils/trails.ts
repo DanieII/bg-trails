@@ -5,27 +5,23 @@ const getMap = (
   _id: string,
   interactive: boolean = true
 ) => {
-  let map: L.Map;
   const trailData: GeoJSON.Feature = {
     type: 'Feature',
     properties: {},
     geometry: geometry
   };
-
-  if (interactive) {
-    map = L.map(`map-${_id}`);
-  } else {
-    map = L.map(`map-${_id}`, {
-      zoomControl: false,
-      dragging: false,
-      touchZoom: false,
-      scrollWheelZoom: false,
-      doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false
-    });
-  }
-
+  const mapOptions = interactive
+    ? {}
+    : {
+        zoomControl: false,
+        dragging: false,
+        touchZoom: false,
+        scrollWheelZoom: false,
+        doubleClickZoom: false,
+        boxZoom: false,
+        keyboard: false
+      };
+  const map = L.map(`map-${_id}`, mapOptions);
   const trail = L.geoJSON(trailData).addTo(map);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

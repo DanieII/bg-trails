@@ -1,15 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'wouter';
 import axiosInstance from '../axiosConfig';
 import { getMap } from '../utils/trails';
 import Comments from './Comments';
 import { TrailType } from '../types';
+import LikeBtn from './LikeBtn';
+import { AuthContext } from '../context/AuthContext';
 
 export default function TrailDetails() {
   const [trail, setTrail] = useState<TrailType>();
-  const [map, setMap] = useState<L.Map>();
   const params = useParams();
   const trailId = params.id;
+  const { authToken, userId } = useContext(AuthContext);
 
   const fetchTrail = async () => {
     try {
@@ -26,15 +28,12 @@ export default function TrailDetails() {
   }, []);
 
   useEffect(() => {
-    let newMap: L.Map;
+    let map: L.Map;
 
-    if (trail) {
-      newMap = getMap(trail.geometry, trail._id);
-      setMap(newMap);
-    }
+    if (trail) map = getMap(trail.geometry, trail._id);
 
     return () => {
-      newMap?.remove();
+      map?.remove();
     };
   }, [trail]);
 
@@ -50,10 +49,13 @@ export default function TrailDetails() {
         )}
       </div>
       {trail && (
-        <div
-          id={`map-${trail._id}`}
-          className='mt-4 h-96 w-full rounded-lg'
-        ></div>
+        <div className='relative'>
+          <div
+            id={`map-${trail._id}`}
+            className='mt-4 h-96 w-full rounded-lg'
+          />
+          <LikeBtn trail={trail} authToken={authToken} userId={userId} />
+        </div>
       )}
       {trail && <Comments trailId={trail._id} />}
     </div>

@@ -10,7 +10,7 @@ function App() {
   return (
     <div className='flex min-h-lvh flex-col'>
       <NavBar />
-      <main>
+      <main className='flex flex-col gap-6'>
         <Switch>
           <Route path='/' component={Index}></Route>
           <Route path='/auth' nest>

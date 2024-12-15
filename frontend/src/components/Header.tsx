@@ -14,7 +14,7 @@ export default function Header() {
   return (
     <header className='relative flex h-[60vh] items-center justify-center'>
       <div className='container my-auto !w-[initial]'>
-        <h1 className='text-center text-3xl font-bold text-white'>
+        <h1 className='text-center text-4xl font-bold text-white'>
           Find hiking trails in Bulgaria
         </h1>
         <form onSubmit={handleSearchFormSubmit}>

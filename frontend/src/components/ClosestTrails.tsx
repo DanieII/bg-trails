@@ -36,7 +36,13 @@ export default function ClosestTrails() {
       const response = await axiosInstance.get(
         `/trails/closest?lat=${lat}&lon=${lon}`
       );
-      setClosestTrails(response.data);
+      const trails = response.data;
+
+      if (trails) {
+        setClosestTrails(response.data);
+      } else {
+        setErrorMessage('No trails near you');
+      }
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +53,7 @@ export default function ClosestTrails() {
       <h2 className='text-center text-2xl font-bold sm:text-left'>
         Explore trails near you
       </h2>
-      <div className='carousel my-4 w-full'>
+      <div className='carousel w-full'>
         <p className='mx-auto text-lg'>{errorMessage}</p>
         {closestTrails &&
           closestTrails.map((trail, i) => {
@@ -57,7 +63,7 @@ export default function ClosestTrails() {
               <div
                 key={trail._id}
                 id={`slide${trailNumber}`}
-                className='carousel-item relative w-full'
+                className='carousel-item relative mx-2 my-4 w-full'
               >
                 <div className='w-full'>
                   <Trail trail={trail} />

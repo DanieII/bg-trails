@@ -6,6 +6,7 @@ import {
   getTrailDetails,
   createComment,
   getComments,
+  likeTrail,
 } from "../controllers/trailController.js";
 import { authenticateUser } from "../middlewares/auth.js";
 
@@ -17,7 +18,6 @@ router.get("/locations", getLocations);
 router.get("/:id", getTrailDetails);
 router.post("/:id/comments", authenticateUser, createComment);
 router.get("/:id/comments", getComments);
-//router.post("/:id/like", authenticateUser, likeTrail);
-//router.post("/:id/unlike", authenticateUser, likeTrail);
+router.post("/:id/like", authenticateUser, likeTrail);
 
 export default router;
