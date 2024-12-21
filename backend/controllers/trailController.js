@@ -26,27 +26,31 @@ const getTrails = async (req, res) => {
 };
 
 const getClosestTrails = async (req, res) => {
-  let { lat, lon } = req.query;
-  lat = parseFloat(lat);
-  lon = parseFloat(lon);
+  try {
+    let { lat, lon } = req.query;
+    lat = parseFloat(lat);
+    lon = parseFloat(lon);
 
-  const closestTrails = await Trail.aggregate([
-    {
-      $geoNear: {
-        near: { type: "Point", coordinates: [lat, lon] },
-        distanceField: "dist.calculated",
-        maxDistance: 5000,
-        spherical: true,
+    const closestTrails = await Trail.aggregate([
+      {
+        $geoNear: {
+          near: { type: "Point", coordinates: [lat, lon] },
+          distanceField: "dist.calculated",
+          maxDistance: 5000,
+          spherical: true,
+        },
       },
-    },
-    {
-      $project: {
-        comments: 0,
+      {
+        $project: {
+          comments: 0,
+        },
       },
-    },
-  ]);
+    ]);
 
-  res.status(200).json(closestTrails);
+    res.status(200).json(closestTrails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const getTrailDetails = async (req, res) => {
@@ -143,6 +147,19 @@ const likeTrail = async (req, res) => {
   }
 };
 
+const getMostLikedTrails = async (req, res) => {
+  try {
+    const trailsSortedByLikes = await Trail.find()
+      .sort({ likes: -1 })
+      .limit(5)
+      .select("-comments");
+
+    return res.status(200).json(trailsSortedByLikes);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   getTrails,
   getClosestTrails,
@@ -151,4 +168,5 @@ export {
   createComment,
   getComments,
   likeTrail,
+  getMostLikedTrails,
 };

@@ -1,8 +1,8 @@
-import { FormEvent, SyntheticEvent, useContext, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import { Link, useLocation } from 'wouter';
 import { AuthContext } from '../context/AuthContext';
-import { login } from '../services/authService';
 import axios from 'axios';
+import axiosInstance from '../axiosConfig';
 
 export default function LogIn() {
   const [email, setEmail] = useState('');
@@ -10,6 +10,15 @@ export default function LogIn() {
   const [errorMessage, setErrorMessage] = useState('');
   const { setAuthToken } = useContext(AuthContext);
   const [location, navigate] = useLocation();
+
+  async function login(email: string, password: string) {
+    const response = await axiosInstance.post(`/auth/login`, {
+      email,
+      password
+    });
+
+    return response.data.token;
+  }
 
   async function handleLoginSubmit(e: FormEvent) {
     e.preventDefault();

@@ -1,15 +1,15 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import { TrailType } from '../types';
 import { Link } from 'wouter';
+import { AuthContext } from '../context/AuthContext';
 
 type LikeBtnProps = {
   trail: TrailType;
-  authToken: string | null;
-  userId: string | null;
 };
 
-export default function LikeBtn({ trail, authToken, userId }: LikeBtnProps) {
+export default function LikeBtn({ trail }: LikeBtnProps) {
+  const { authToken, userId } = useContext(AuthContext);
   const [isLiked, setIsLiked] = useState<boolean>(
     userId ? (trail.likes?.includes(userId) ?? false) : false
   );
@@ -26,10 +26,7 @@ export default function LikeBtn({ trail, authToken, userId }: LikeBtnProps) {
   return (
     <>
       {authToken ? (
-        <button
-          className='btn btn-circle absolute right-5 top-5 z-[1000]'
-          onClick={likeTrail}
-        >
+        <button className='btn btn-circle' onClick={likeTrail}>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             className='h-6 w-6'

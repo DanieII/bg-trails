@@ -1,7 +1,6 @@
-import { useEffect, useContext } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'wouter';
 import { getMap } from '../utils/trails';
-import { AuthContext } from '../context/AuthContext';
 import { TrailType } from '../types';
 import LikeBtn from './LikeBtn';
 
@@ -12,11 +11,9 @@ type TrailProps = {
 
 export default function Trail({ trail, className }: TrailProps) {
   const { _id, name, location, length, geometry } = trail;
-  const { authToken, userId } = useContext(AuthContext);
 
   useEffect(() => {
     const map = getMap(geometry, _id, false);
-    console.log(map);
 
     return () => {
       map?.remove();
@@ -43,7 +40,9 @@ export default function Trail({ trail, className }: TrailProps) {
           </div>
         </div>
       </div>
-      <LikeBtn trail={trail} authToken={authToken} userId={userId} />
+      <div className='absolute right-5 top-5'>
+        <LikeBtn trail={trail} />
+      </div>
     </div>
   );
 }

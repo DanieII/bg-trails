@@ -10,6 +10,10 @@ type CommentsProps = {
 export default function Comments({ trailId }: CommentsProps) {
   const [comments, setComments] = useState<CommentType[]>();
 
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
   const fetchComments = async () => {
     try {
       const response = await axiosInstance.get(`trails/${trailId}/comments`);
@@ -19,10 +23,6 @@ export default function Comments({ trailId }: CommentsProps) {
       console.log(error);
     }
   };
-
-  useEffect(() => {
-    fetchComments();
-  }, []);
 
   const formatDate = (date: string) => {
     const dateObj = new Date(date);

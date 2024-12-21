@@ -7,6 +7,7 @@ import {
   createComment,
   getComments,
   likeTrail,
+  getMostLikedTrails,
 } from "../controllers/trailController.js";
 import { authenticateUser } from "../middlewares/auth.js";
 
@@ -15,6 +16,7 @@ const router = express.Router();
 router.get("/", getTrails);
 router.get("/closest", getClosestTrails);
 router.get("/locations", getLocations);
+router.get("/most-liked", getMostLikedTrails);
 router.get("/:id", getTrailDetails);
 router.post("/:id/comments", authenticateUser, createComment);
 router.get("/:id/comments", getComments);

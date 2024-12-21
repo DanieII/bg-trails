@@ -1,9 +1,9 @@
 import { FormEvent, useContext, useState } from 'react';
 import { validateEmail } from '../utils/validation';
-import { register } from '../services/authService';
 import { Link, useLocation } from 'wouter';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import axiosInstance from '../axiosConfig';
 
 export default function Register() {
   const [firstName, setFirstName] = useState<string>('');
@@ -14,7 +14,23 @@ export default function Register() {
   const { setAuthToken } = useContext(AuthContext);
   const [location, navigate] = useLocation();
 
-  async function handleLoginSubmit(e: FormEvent<HTMLFormElement>) {
+  async function register(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string
+  ) {
+    const response = await axiosInstance.post('/auth/register', {
+      firstName,
+      lastName,
+      email,
+      password
+    });
+
+    return response.data.token;
+  }
+
+  async function handleRegisterSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const isEmailValid = validateEmail(email);
@@ -47,7 +63,7 @@ export default function Register() {
         Register
       </h1>
       <div>
-        <form className='form-control gap-4' onSubmit={handleLoginSubmit}>
+        <form className='form-control gap-4' onSubmit={handleRegisterSubmit}>
           <input
             type='text'
             placeholder='First Name'

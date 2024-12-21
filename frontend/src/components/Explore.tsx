@@ -18,10 +18,10 @@ export default function Explore() {
   }, []);
 
   useEffect(() => {
-    fetchTrails(0);
+    getTrails(0);
   }, [locationFilter]);
 
-  const fetchTrails = async (currentPage = page) => {
+  const getTrails = async (currentPage = page) => {
     try {
       const searchParams = new URLSearchParams(searchString);
       const search = searchParams.get('search') || '';
@@ -61,7 +61,7 @@ export default function Explore() {
         </h1>
         <details className='dropdown dropdown-end mx-auto sm:mx-0'>
           <summary className='btn btn-primary m-1'>Locations</summary>
-          <ul className='menu dropdown-content z-[1] w-52 rounded-box bg-primary p-2 text-primary-content shadow'>
+          <ul className='menu dropdown-content z-10 w-52 rounded-box bg-primary p-2 text-primary-content shadow'>
             {locations.map((location) => (
               <li key={location}>
                 <a
@@ -79,7 +79,7 @@ export default function Explore() {
       </div>
       <InfiniteScroll
         dataLength={trails.length}
-        next={fetchTrails}
+        next={getTrails}
         hasMore={hasMore}
         loader={
           <div className='flex items-center justify-center'>

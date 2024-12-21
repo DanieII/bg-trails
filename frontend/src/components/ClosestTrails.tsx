@@ -50,7 +50,7 @@ export default function ClosestTrails() {
 
   return (
     <div className='container'>
-      <h2 className='text-center text-2xl font-bold sm:text-left'>
+      <h2 className='mb-2 text-center text-3xl font-bold sm:text-left'>
         Explore trails near you
       </h2>
       <div className='carousel w-full'>
@@ -62,21 +62,21 @@ export default function ClosestTrails() {
             return (
               <div
                 key={trail._id}
-                id={`slide${trailNumber}`}
-                className='carousel-item relative mx-2 my-4 w-full'
+                id={`closest-slide${trailNumber}`}
+                className='carousel-item relative m-2 w-full overflow-visible'
               >
                 <div className='w-full'>
                   <Trail trail={trail} />
                 </div>
                 <div className='absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between'>
                   <a
-                    href={`#slide${trailNumber > 1 ? trailNumber - 1 : trailNumber}`}
+                    href={`#closest-slide${trailNumber > 1 ? trailNumber - 1 : trailNumber}`}
                     className='btn btn-circle'
                   >
                     ❮
                   </a>
                   <a
-                    href={`#slide${trailNumber < closestTrails.length ? trailNumber + 1 : trailNumber}`}
+                    href={`#closest-slide${trailNumber < closestTrails.length ? trailNumber + 1 : trailNumber}`}
                     className='btn btn-circle'
                   >
                     ❯
