@@ -1,5 +1,6 @@
 services:
   bg-trail-db:
+    container_name: bg-trail-db
     image: mongo
     ports:
       - "27017:27017"
@@ -7,6 +8,7 @@ services:
       - "bg-trail-mongodb:/data/db"
 
   bg-trail-backend:
+    container_name: bg-trail-backend
     build:
       context: ./backend
     ports:
@@ -16,6 +18,7 @@ services:
       - "/app/node_modules"
 
   bg-trail-frontend:
+    container_name: bg-trail-frontend
     build:
       context: ./frontend
     ports:
