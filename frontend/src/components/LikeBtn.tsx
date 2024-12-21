@@ -45,7 +45,7 @@ export default function LikeBtn({ trail }: LikeBtnProps) {
       ) : (
         <>
           <button
-            className='btn btn-circle absolute right-5 top-5 z-[1000]'
+            className='btn btn-circle'
             onClick={() => {
               const modal = document.getElementById(
                 'like_modal'
