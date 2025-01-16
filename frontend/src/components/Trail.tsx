@@ -3,20 +3,29 @@ import { Link } from 'wouter';
 import { getMap } from '../utils/trails';
 import { TrailType } from '../types';
 import LikeBtn from './LikeBtn';
+import { useRef } from 'react';
 
 type TrailProps = {
   trail: TrailType;
+  mapID: string;
   className?: string;
 };
 
-export default function Trail({ trail, className }: TrailProps) {
-  const { _id, name, location, length, geometry } = trail;
+export default function Trail({ trail, mapID, className }: TrailProps) {
+  const { _id: trailID, name, location, length, geometry } = trail;
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
-    const map = getMap(geometry, _id, false);
+    if (!mapRef.current) {
+      const map = getMap(geometry, mapID, trailID, false);
+      mapRef.current = map;
+    }
 
     return () => {
-      map?.remove();
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
     };
   }, []);
 
@@ -24,13 +33,13 @@ export default function Trail({ trail, className }: TrailProps) {
     <div
       className={`card relative flex-grow bg-base-100 shadow-md ${className}`}
     >
-      <Link to={`~/explore/${_id}`}>
+      <Link to={`~/explore/${trailID}`}>
         <figure>
-          <div id={`map-${_id}`} className='z-0 h-48 w-full'></div>
+          <div id={`map-${mapID}-${trailID}`} className='z-0 h-48 w-full'></div>
         </figure>
       </Link>
       <div className='card-body'>
-        <Link to={`~/explore/${_id}`}>
+        <Link to={`~/explore/${trailID}`}>
           <h2 className='card-title'>{name}</h2>
         </Link>
         <div className='mt-auto pt-2'>

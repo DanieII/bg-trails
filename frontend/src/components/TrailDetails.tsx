@@ -10,6 +10,7 @@ export default function TrailDetails() {
   const [trail, setTrail] = useState<TrailType>();
   const params = useParams();
   const trailId = params.id;
+  const mapID = 'details';
 
   useEffect(() => {
     fetchTrail();
@@ -18,7 +19,7 @@ export default function TrailDetails() {
   useEffect(() => {
     let map: L.Map;
 
-    if (trail) map = getMap(trail.geometry, trail._id);
+    if (trail) map = getMap(trail.geometry, mapID, trail._id);
 
     return () => {
       map?.remove();
@@ -49,7 +50,7 @@ export default function TrailDetails() {
       {trail && (
         <div className='relative'>
           <div
-            id={`map-${trail._id}`}
+            id={`map-${mapID}-${trail._id}`}
             className='z-0 mt-4 h-96 w-full rounded-lg'
           />
           <div className='absolute right-5 top-5'>

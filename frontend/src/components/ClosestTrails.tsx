@@ -66,7 +66,7 @@ export default function ClosestTrails() {
                 className='carousel-item relative m-2 w-full overflow-visible'
               >
                 <div className='w-full'>
-                  <Trail trail={trail} />
+                  <Trail trail={trail} mapID='closest' />
                 </div>
                 <div className='absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between'>
                   <a

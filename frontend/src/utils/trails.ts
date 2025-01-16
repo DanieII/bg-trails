@@ -2,7 +2,8 @@ import L from 'leaflet';
 
 const getMap = (
   geometry: GeoJSON.Geometry,
-  _id: string,
+  mapID: string,
+  trailID: string,
   interactive: boolean = true
 ) => {
   const trailData: GeoJSON.Feature = {
@@ -21,7 +22,7 @@ const getMap = (
         boxZoom: false,
         keyboard: false
       };
-  const map = L.map(`map-${_id}`, mapOptions);
+  const map = L.map(`map-${mapID}-${trailID}`, mapOptions);
   const trail = L.geoJSON(trailData).addTo(map);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
